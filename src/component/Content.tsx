@@ -4,6 +4,7 @@ import { safeLoad } from 'js-yaml'
 import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router-dom';
 import { ContentProps, ContentState } from '../model';
+import { CodeBlock } from './CodeBlock';
 
 export class Content extends Component<RouteComponentProps<ContentProps>, ContentState> {
 
@@ -49,7 +50,9 @@ export class Content extends Component<RouteComponentProps<ContentProps>, Conten
     const { article, markdown } = this.state;
     return <div className="markdown-body">
       <div className="author"><i>{article.author}</i> at {article.date}</div>
-      <ReactMarkdown source={markdown} escapeHtml={false}/>
+      <ReactMarkdown source={markdown} escapeHtml={false}
+                     renderers={{code: CodeBlock}}
+      />
       <div>Tags: {article.tags.map(t => <span className="tag" key={t}>
         <Link to={`/tags/${t}`}>{t}</Link>
       </span>)}</div>

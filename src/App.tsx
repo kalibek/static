@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Link, Route, Switch } from 'react-router-dom';
 import { Menu } from './component/Menu';
 import { Content } from './component/Content';
 import { AppState, Article, Topic } from './model';
@@ -52,7 +52,7 @@ class App extends Component<{}, AppState> {
     this.onResize();
   }
 
-  onResize =() => {
+  onResize = () => {
     const mobile = window.innerWidth < 901;
     this.setState((prev, props) => {
       return {
@@ -75,7 +75,7 @@ class App extends Component<{}, AppState> {
 
   toggleMenu = () => {
     this.setState((prev, props) => {
-      return {...prev, showMenu: !prev.showMenu}
+      return { ...prev, showMenu: !prev.showMenu }
     });
   };
 
@@ -90,7 +90,9 @@ class App extends Component<{}, AppState> {
     return (
       <Router>
         <div className="App">
-          <div className="Logo">Logo</div>
+          <div className="Logo">
+            <Link to="/about"><img src="https://www.gravatar.com/avatar/1a52eb773d66f8a2500f1fe19d85d004?s=32"/> Kalibek</Link>
+          </div>
           <div className="Header">
             <span className="menu-toggle" onClick={this.toggleMenu}><i className="fas fa-bars"/></span>
             <small><b>{topic}</b> - {title}</small>
