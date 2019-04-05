@@ -1,0 +1,9 @@
+topics:
+  - subject: Main
+    articles:
+      - title: Home
+        path: /
+  - subject: development
+    articles:
+      - title: Another one page
+        path: /another-page

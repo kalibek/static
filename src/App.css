@@ -1,35 +1,125 @@
+@media screen and (min-width: 901px) {
+    .App {
+        display: grid;
+        grid-template-columns: 1fr 3fr 1fr;
+        grid-template-rows: 40px calc(100vh - 40px);
+        grid-template-areas: "Logo Header ." "Menu Content .";
+    }
+
+    .Logo {
+        grid-area: Logo;
+    }
+
+    .Header {
+        grid-area: Header;
+        text-indent: 10px;
+    }
+
+    .Menu {
+        grid-area: Menu;
+    }
+
+    .Content {
+        grid-area: Content;
+    }
+
+    .menu-toggle {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 900px) {
+
+    .Header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+    }
+
+    .Menu {
+        position: fixed;
+        top: 40px;
+        width: 100%;
+    }
+
+    .Logo {
+        display: none;
+    }
+    .Content {
+        margin-top: 40px;
+        min-height: 100vh;
+    }
+    .menu-toggle {
+        margin: 0 15px;
+    }
+}
+
 .App {
     background-color: #282c34;
-    color: white;
+    color: #f3f3f3;
     min-height: 100vh;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-template-rows: 40px calc(100vh - 40px);
-    grid-template-areas: "Logo Header Header Header" "Menu Content Content .";
 }
 
 .Logo {
-    grid-area: Logo;
-    background-color: #282c34;
+    background-color: #2980B9;
     text-align: center;
     line-height: 40px;
 }
 
 .Header {
-    grid-area: Header;
-    background-color: #0c0d13;
+    background-color: #f3f3f3;
+    color: #0c3044;
     line-height: 40px;
 }
 
 .Menu {
-    grid-area: Menu;
-    background-color: #52555c;
+    background-color: #404040;
+    text-indent: 10px;
+    font-size: 14px;
+}
+
+.Menu ul {
+    margin: 10px 0;
+    padding: 0;
+}
+
+.Menu h4 {
+    margin-top: 10px;
+}
+
+.Menu li {
+    margin-top: 10px;
+    width: 100%;
+    padding: 5px 0;
+}
+.Menu li a {
+    color: #f3f3f3;
+}
+.Menu li:hover {
+    background-color: #9c9fa8;
 }
 
 .Content {
-    grid-area: Content;
+    padding: 15px;
     background-color: #f3f3f3;
-    color: #0c0d13;
+    color: #24292e;
     overflow-y: scroll;
 }
 
+.tag {
+    background-color: #9c9fa8;
+    color: #282c34;
+    font-size: small;
+    margin: 3px;
+    padding: 3px 5px;
+    border-radius: 3px;
+}
+
+.tag a {
+    color: #f3f3f3;
+}
+
+.author {
+    margin: 20px 0;
+}

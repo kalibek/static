@@ -1,5 +1,3 @@
-# Some header
-
 text
 
 ```bash
