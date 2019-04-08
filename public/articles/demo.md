@@ -1,3 +1,5 @@
+# Demo page
+
 Changes are automatically rendered as you type.
 
 * Implements [GitHub Flavored Markdown](https://github.github.com/gfm/)

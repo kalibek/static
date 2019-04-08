@@ -59,7 +59,7 @@ class App extends Component<{}, AppState> {
         ...prev, mobile
       }
     })
-  }
+  };
 
   setTitle = (article: Article, topic: string) => {
     this.setState((prev, props) => {
@@ -88,7 +88,7 @@ class App extends Component<{}, AppState> {
     const { title } = article;
     const showMenu = !this.state.mobile || this.state.showMenu;
     return (
-      <Router>
+      <Router basename={process.env.PUBLIC_URL}>
         <div className="App">
           <div className="Logo">
             <Link to="/about"><img src="https://www.gravatar.com/avatar/1a52eb773d66f8a2500f1fe19d85d004?s=32"/> Kalibek</Link>
@@ -102,7 +102,6 @@ class App extends Component<{}, AppState> {
               <Menu onChoose={this.setTitle} article={article} topics={topics}/>
             </div> : ""}
           <div className="Content">
-            <h1>{title}</h1>
             <Switch>
               <Route exact path="/" component={Content}/>
               <Route path="/tags/:tag" component={TagSearch}/>

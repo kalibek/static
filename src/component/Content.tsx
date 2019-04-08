@@ -49,10 +49,10 @@ export class Content extends Component<RouteComponentProps<ContentProps>, Conten
   render() {
     const { article, markdown } = this.state;
     return <div className="markdown-body">
-      <div className="author"><i>{article.author}</i> at {article.date}</div>
       <ReactMarkdown source={markdown} escapeHtml={false}
                      renderers={{code: CodeBlock}}
       />
+      <div className="author"><i>{article.author}</i> at {article.date}</div>
       <div>Tags: {article.tags.map(t => <span className="tag" key={t}>
         <Link to={`/tags/${t}`}>{t}</Link>
       </span>)}</div>
