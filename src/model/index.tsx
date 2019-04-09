@@ -9,6 +9,7 @@ export interface AppState {
 export interface Article {
   title: string;
   path: string;
+  details?: ArticleDetails
 }
 
 export interface Topic {
