@@ -1,13 +1,7 @@
 import React, { Component } from 'react';
-import { Article, MenuProps } from '../model';
-import { Link } from 'react-router-dom';
+import { MenuProps } from '../model';
 
 export class Menu extends Component <MenuProps> {
-
-  onClick = (article: Article, topic: string) => {
-    this.props.onChoose(article, topic);
-  };
-
 
   render(): React.ReactNode {
     const { topics } = this.props;
@@ -16,7 +10,7 @@ export class Menu extends Component <MenuProps> {
         <h4>{t.subject}</h4>
         <ul>
           {t.articles.map(a => <li key={a.path}>
-            <Link to={a.path} onClick={(e => this.onClick(a, t.subject))}>{a.title}</Link>
+            <a href={a.path}>{a.title}</a>
           </li>)}
         </ul>
       </div>)}

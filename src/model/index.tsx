@@ -1,15 +1,19 @@
-export interface AppState {
+export interface AppComponentState {
   article: Article;
   topic: string;
-  topics: Topic[],
   mobile: boolean
   showMenu: boolean
+}
+
+export interface AppProps {
+  topics: Topic[];
+  title: string;
 }
 
 export interface Article {
   title: string;
   path: string;
-  details?: ArticleDetails
+  details: ArticleDetails
 }
 
 export interface Topic {
@@ -20,7 +24,6 @@ export interface Topic {
 export interface MenuProps {
   article: Article;
   topics: Topic[];
-  onChoose: (article: Article, topic: string) => void;
 }
 
 export interface ArticleDetails {
@@ -31,11 +34,37 @@ export interface ArticleDetails {
 }
 
 export interface ContentProps {
-  path: string;
+  path: string,
 }
 
 export interface ContentState {
-  article: ArticleDetails;
   markdown: string;
 }
 
+export const getTopicByPath = (path: string, topics: Topic[]): string => {
+  const topic = topics.find(t => {
+    let find = t.articles.find(a => a.path == path);
+    return typeof find !== 'undefined';
+  });
+  return topic == null ? "-=Home=-" : topic.subject;
+};
+
+export const getArticleByPath = (path: string, topics: Topic[]): Article => {
+  for (let i = 0; i < topics.length; i++) {
+    let find = topics[i].articles.find(a => a.path == path);
+    if (typeof find !== 'undefined') {
+      return find;
+    }
+  }
+  return emptyArticle("Not found", "/");
+};
+
+export const emptyArticle = (title: string, path: string): Article => ({
+  title, path,
+  details: {
+    content: '',
+    author: '',
+    date: '',
+    tags: []
+  }
+})

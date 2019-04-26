@@ -1,118 +1,72 @@
 import React, { Component } from 'react';
 import './App.css';
-import { BrowserRouter as Router, Link, Route, Switch } from 'react-router-dom';
-import { Menu } from './component/Menu';
-import { Content } from './component/Content';
-import { AppState, Article, Topic } from './model';
+import { Article, Topic } from './model';
 import { safeLoad } from 'js-yaml';
-import { TagSearch } from './component/TagSearch';
+import { connect } from 'react-redux';
+import { addTopics, ApplicationState, setMobile, store, toggleMenu } from './store';
+import { Menu } from './component/Menu';
+import Content from './component/Content';
 
+interface Props {
+  topics: Topic[]
+  topic: string;
+  article: Article,
+  mobile: boolean,
+  showMenu: boolean,
+}
 
-class App extends Component<{}, AppState> {
+class App extends Component<Props, {}> {
 
-  constructor(props: any) {
-    super(props);
-    const title = 'Home';
-    this.state = {
-      article: {
-        title,
-        path: '',
-      },
-      topic: '',
-      topics: [],
-      mobile: false,
-      showMenu: false
-    };
-    document.title = title;
-
-  }
 
   async componentDidMount() {
-    let path = window.location.pathname;
+    const path = window.location.pathname;
     const data = await fetch(`/contents/index.yml`).then(res => res.text());
     const topics: Topic[] = safeLoad(data).topics;
-    let article: Article;
-    let topic = '';
-    topics.map(t => {
-      t.articles.map(a => {
-        if (a.path === path) {
-          article = a;
-          topic = t.subject;
-        }
-      });
-    });
-
-    this.setState((prev, props) => {
-      return {
-        ...prev, topics, topic, article
-      }
-    });
-
-    window.addEventListener('resize', this.onResize);
-    this.onResize();
+    store.dispatch(addTopics(topics, path));
   }
 
   onResize = () => {
     const mobile = window.innerWidth < 901;
-    this.setState((prev, props) => {
-      return {
-        ...prev, mobile
-      }
-    })
-  };
-
-  setTitle = (article: Article, topic: string) => {
-    this.setState((prev, props) => {
-      return {
-        ...prev,
-        article,
-        topic,
-        showMenu: false
-      }
-    });
-    document.title = article.title;
+    store.dispatch(setMobile(mobile))
   };
 
   toggleMenu = () => {
-    this.setState((prev, props) => {
-      return { ...prev, showMenu: !prev.showMenu }
-    });
+    store.dispatch(toggleMenu(!this.props.showMenu));
   };
 
   render() {
-    const { topic, topics } = this.state;
-    const article = this.state.article || {
-      title: "search",
-      path: "/"
-    };
-    const { title } = article;
-    const showMenu = !this.state.mobile || this.state.showMenu;
+    const { showMenu, topics, article, topic } = this.props;
+    document.title = article.title;
+
     return (
-      <Router basename={process.env.PUBLIC_URL}>
-        <div className="App">
-          <div className="Logo">
-            <Link to="/about"><img src="https://www.gravatar.com/avatar/1a52eb773d66f8a2500f1fe19d85d004?s=32"/> Kalibek</Link>
-          </div>
-          <div className="Header">
-            <span className="menu-toggle" onClick={this.toggleMenu}><i className="fas fa-bars"/></span>
-            <small><b>{topic}</b> - {title}</small>
-          </div>
-          {showMenu ?
-            <div className="Menu">
-              <Menu onChoose={this.setTitle} article={article} topics={topics}/>
-            </div> : ""}
-          <div className="Content">
-            <Switch>
-              <Route exact path="/" component={Content}/>
-              <Route path="/tags/:tag" component={TagSearch}/>
-              <Route path="/:path" component={Content}/>
-            </Switch>
-          </div>
+      <div className="App">
+        <div className="Logo">
+          <a href="/about">
+            <img src="https://www.gravatar.com/avatar/1a52eb773d66f8a2500f1fe19d85d004?s=32"/> Kalibek</a>
         </div>
-      </Router>
+        <div className="Header">
+          <span className="menu-toggle" onClick={this.toggleMenu}><i className="fas fa-bars"/></span>
+          <small><b>{topic}</b> - {article.title}</small>
+        </div>
+        {showMenu ?
+          <div className="Menu">
+            <Menu article={article} topics={topics}/>
+          </div> : ""}
+        <div className="Content">
+          <Content/>
+        </div>
+      </div>
     );
   }
 }
 
+const mapStateToProps = (state: ApplicationState): Props => ({
+  topics: state.topics,
+  mobile: state.mobile,
+  showMenu: state.showMenu,
+  article: state.article,
+  topic: state.topic,
+});
 
-export default App;
+
+export default connect(mapStateToProps)(App);

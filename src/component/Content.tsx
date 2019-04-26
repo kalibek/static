@@ -1,45 +1,39 @@
 import React, { Component } from 'react';
-import { RouteComponentProps } from 'react-router';
-import { safeLoad } from 'js-yaml'
 import ReactMarkdown from 'react-markdown';
-import { Link } from 'react-router-dom';
-import { ContentProps, ContentState } from '../model';
+import { Article, ContentState } from '../model';
 import { CodeBlock } from './CodeBlock';
+import { ApplicationState } from '../store';
+import { connect } from 'react-redux';
 
-export class Content extends Component<RouteComponentProps<ContentProps>, ContentState> {
+interface Props {
+  article: Article;
+}
 
-  constructor(props: RouteComponentProps<ContentProps>) {
+
+class Content extends Component<Props, ContentState> {
+
+  constructor(props: Props) {
     super(props);
     this.state = {
-      article: {
-        author: "none",
-        content: "none",
-        date: "none",
-        tags: []
-      },
       markdown: ""
     }
   }
 
-  async componentWillReceiveProps(nextProps: RouteComponentProps<ContentProps>) {
-    const path = nextProps.match.params.path || "default-page";
-    await this.loadContent(path)
+  async componentWillReceiveProps(nextProps: Props) {
+    await this.loadContent()
   }
 
   async componentDidMount() {
-    const path = this.props.match.params.path || "default-page";
-    await this.loadContent(path)
+    await this.loadContent()
   }
 
-  async loadContent(path: string) {
-    const data = await fetch(`/contents/${path}.yml`).then(res => res.text());
-    let article = safeLoad(data).article;
-    const markdown = await fetch(`/articles/${article.content}`).then(res => res.text());
+  async loadContent() {
+    const { article } = this.props;
+    const markdown = await fetch(`/articles/${article.details.content}`).then(res => res.text());
 
     this.setState((prev, props) => {
       return {
         ...prev,
-        article,
         markdown
       }
     })
@@ -47,15 +41,39 @@ export class Content extends Component<RouteComponentProps<ContentProps>, Conten
 
 
   render() {
-    const { article, markdown } = this.state;
+    const { markdown } = this.state;
+    const details = this.props.article.details;
     return <div className="markdown-body">
       <ReactMarkdown source={markdown} escapeHtml={false}
-                     renderers={{code: CodeBlock}}
+                     renderers={{
+                       heading: HeadingRenderer,
+                       code: CodeBlock
+                     }}
       />
-      <div className="author"><i>{article.author}</i> at {article.date}</div>
-      <div>Tags: {article.tags.map(t => <span className="tag" key={t}>
-        <Link to={`/tags/${t}`}>{t}</Link>
+      <div className="author"><i>{details.author}</i> at {details.date}</div>
+      <div>Tags: {details.tags.map(t => <span className="tag" key={t}>
+        <a href={`/tags/${t}`}>{t}</a>
       </span>)}</div>
     </div>;
   }
 }
+
+const mapStateToProps = (state: ApplicationState): Props => ({
+  article: state.article
+});
+
+export default connect(mapStateToProps)(Content);
+
+const flatten = (text: string, child: any): string => {
+  return typeof child === 'string'
+    ? text + child
+    : React.Children.toArray(child.props.children).reduce(flatten, text)
+};
+
+const HeadingRenderer = (props: any) => {
+  const children = React.Children.toArray(props.children)
+  const text = children.reduce(flatten, '');
+  const slug = text.toLowerCase().replace(/\W/g, '-')
+  return React.createElement('h' + props.level, { id: slug }, props.children)
+};
+
