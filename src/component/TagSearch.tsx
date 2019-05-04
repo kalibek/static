@@ -1,20 +1,25 @@
 import React, { Component } from 'react';
 import { RouteComponentProps } from 'react-router';
 import { Article, Topic } from '../model';
-import { safeLoad } from 'js-yaml';
 import { Link } from 'react-router-dom';
+import { ApplicationState } from '../store';
+import { connect } from 'react-redux';
 
-interface TagSearchRouteProps {
+interface PathProps {
   tag: string;
 }
 
-interface TagSearchState {
+interface Props {
+  topics: Topic[]
+}
+
+interface State {
   found: Article[]
 }
 
-export class TagSearch extends Component<RouteComponentProps<TagSearchRouteProps>, TagSearchState> {
+class TagSearch extends Component<RouteComponentProps<PathProps> & Props, State> {
 
-  constructor(props: RouteComponentProps<TagSearchRouteProps>) {
+  constructor(props: RouteComponentProps<PathProps> & Props) {
     super(props);
     this.state = {
       found: []
@@ -22,14 +27,11 @@ export class TagSearch extends Component<RouteComponentProps<TagSearchRouteProps
   }
 
   async componentDidMount() {
-    const data = await fetch(`/contents/index.yml`).then(res => res.text());
-    const topics: Topic[] = safeLoad(data).topics;
+    console.log(this.props);
+    const { topics } = this.props;
     topics.map(topic => {
       topic.articles.map(async article => {
-        const path = article.path === '/' ? "default-page" : article.path;
-        const data = await fetch(`/contents/${path}.yml`).then(res => res.text());
-        let details = safeLoad(data).article;
-        details.tags.map((t: string) => {
+        article.details.tags.map((t: string) => {
           if (t == this.props.match.params.tag) {
             this.setState((prev, props) => {
               return { ...prev, found: [...prev.found, article] }
@@ -50,3 +52,9 @@ export class TagSearch extends Component<RouteComponentProps<TagSearchRouteProps
     </div>;
   }
 }
+
+const mapStateToProps = (state: ApplicationState): Props => ({
+  topics: state.topics
+});
+
+export default connect(mapStateToProps)(TagSearch);

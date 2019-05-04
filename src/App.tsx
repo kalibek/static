@@ -8,7 +8,7 @@ import { Menu } from './component/Menu';
 import Content from './component/Content';
 import { Route, Switch } from 'react-router';
 import { BrowserRouter as Router, Link } from 'react-router-dom';
-import { TagSearch } from './component/TagSearch';
+import TagSearch from './component/TagSearch';
 
 interface Props {
   topics: Topic[]

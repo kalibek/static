@@ -1,14 +1,9 @@
 # Docker for developers
 
-## Goal
-
-To persuade developer to use container based technologies
-- THINK: where can I apply it in my project
-- FEEL: ha! it is simple
-- DO: use it
-
-My opinion is that containerization in common and docker particularly is the best thing that happened in IT industry in last decade. It has simplified building deliverables and deploying applications sugnificantly. And it is of course technology that made life easier for system engineers and devops guys.
-But the question of todays topic is: Do developers(java, .net, js) need docker?
+My opinion is that containerization in common and docker particularly is the best thing that happened in IT 
+industry in last decade. It has simplified building deliverables and deploying applications significantly. 
+And it is of course technology that made life easier for system engineers and devops guys.
+But the question of today's topic is: Do developers(java, .net, js) need docker?
 
 
 ## Contents
