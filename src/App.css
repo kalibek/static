@@ -96,6 +96,8 @@
     padding: 5px 0;
 }
 .Menu li a {
+    display: block;
+    width: 100%;
     color: #f3f3f3;
 }
 .Menu li:hover {

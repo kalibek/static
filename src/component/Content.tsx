@@ -20,23 +20,24 @@ class Content extends Component<Props, ContentState> {
   }
 
   async componentWillReceiveProps(nextProps: Props) {
-    await this.loadContent()
+    await this.loadContent(nextProps)
   }
 
   async componentDidMount() {
-    await this.loadContent()
+    await this.loadContent(this.props)
   }
 
-  async loadContent() {
-    const { article } = this.props;
-    const markdown = await fetch(`/articles/${article.details.content}`).then(res => res.text());
-
-    this.setState((prev, props) => {
-      return {
-        ...prev,
-        markdown
-      }
-    })
+  async loadContent(props: Props) {
+    const { article } = props;
+    if (article.details.content !== '') {
+      const markdown = await fetch(`/articles/${article.details.content}`).then(res => res.text());
+      this.setState((prev, props) => {
+        return {
+          ...prev,
+          markdown
+        }
+      });
+    }
   }
 
 
