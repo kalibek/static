@@ -1,0 +1,1 @@
+static content for personal blog
