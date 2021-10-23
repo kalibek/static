@@ -1,0 +1,20 @@
+{
+  "index": {
+    "id": "home",
+    "title": "Home",
+    "md": "/content/index.md"
+  },
+  "articles": [
+    {
+      "id": "about",
+      "title": "About us",
+      "md": "/content/about.md"
+    },
+    {
+      "id": "k3s",
+      "title": "k3s on home server",
+      "md": "/content/k3s.md",
+      "category": "kubernetes"
+    }
+  ]
+}
